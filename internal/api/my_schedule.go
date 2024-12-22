@@ -10,14 +10,14 @@ func (service *service) MySchedule(w http.ResponseWriter, r *http.Request) {
 	vals := r.URL.Query()
 	if len(vals["token"]) == 0 || vals["token"][0] != service.conf.Token {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("unauthorized"))
+		_, _ = w.Write([]byte("unauthorized"))
 		return
 	}
 
 	events, err := service.hubService.GetMySchedule(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -33,5 +33,5 @@ func (service *service) MySchedule(w http.ResponseWriter, r *http.Request) {
 
 	respBody := cal.Serialize()
 	w.Header().Set("Content-Disposition", "attachment; filename=my_schedule.ics")
-	w.Write([]byte(respBody))
+	_, _ = w.Write([]byte(respBody))
 }
