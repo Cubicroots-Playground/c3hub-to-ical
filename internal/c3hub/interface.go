@@ -16,3 +16,10 @@ type Event struct {
 	StartTime time.Time
 	EndTime   time.Time
 }
+
+type Room struct {
+	ID       string
+	Name     string
+	Type     string
+	Assembly string
+}

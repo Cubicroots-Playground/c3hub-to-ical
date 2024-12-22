@@ -28,6 +28,7 @@ func (service *service) MySchedule(w http.ResponseWriter, r *http.Request) {
 		calEv.SetStartAt(ev.StartTime)
 		calEv.SetEndAt(ev.EndTime)
 		calEv.SetSummary(ev.Name)
+		calEv.SetLocation(ev.Room)
 	}
 
 	respBody := cal.Serialize()

@@ -86,7 +86,15 @@ func (service *service) getEvents(
 		return nil, err
 	}
 
-	// TODO: inject rooms.
+	rooms, err := service.getRooms(ctx)
+	if err != nil {
+		return nil, err
+	}
+	roomIDToRoom := make(map[string]Room, len(rooms))
+	for _, room := range rooms {
+		roomIDToRoom[room.ID] = room
+	}
+
 	events := make([]Event, len(intEvents))
 	for i := range intEvents {
 		start, err := time.Parse(time.RFC3339, intEvents[i].ScheduleStart)
@@ -101,11 +109,67 @@ func (service *service) getEvents(
 		events[i] = Event{
 			ID:        intEvents[i].ID,
 			Name:      intEvents[i].Name,
-			Room:      "",
 			StartTime: start,
 			EndTime:   end,
 		}
+
+		if intEvents[i].Room != nil {
+			if room, ok := roomIDToRoom[*intEvents[i].Room]; ok {
+				events[i].Room = room.Name
+				if room.Assembly != "" {
+					events[i].Room += " - " + room.Assembly
+				}
+				events[i].Room += " [" + room.Type + "]"
+			}
+		} else if intEvents[i].Location != nil {
+			events[i].Room = *intEvents[i].Location
+		}
+
 	}
 
 	return events, nil
+}
+
+func (service *service) getRooms(
+	ctx context.Context,
+) ([]Room, error) {
+	type HubRoom struct {
+		ID       string
+		Name     string
+		Assembly string
+		RoomType string `json:"room_type"`
+	}
+
+	r, err := http.NewRequest(http.MethodGet, service.config.BaseURL+"/rooms", nil)
+	if err != nil {
+		return nil, err
+	}
+	r.Header.Add("Cookie", "38C3_SESSION="+service.config.SessionCookie)
+	r = r.WithContext(ctx)
+
+	resp, err := http.DefaultClient.Do(r)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
+	var intRooms []HubRoom
+	err = json.NewDecoder(resp.Body).Decode(&intRooms)
+	if err != nil {
+		return nil, err
+	}
+
+	rooms := make([]Room, len(intRooms))
+	for i := range intRooms {
+		rooms[i] = Room{
+			ID:       intRooms[i].ID,
+			Name:     intRooms[i].Name,
+			Assembly: intRooms[i].Assembly,
+			Type:     intRooms[i].RoomType,
+		}
+	}
+
+	return rooms, nil
 }
