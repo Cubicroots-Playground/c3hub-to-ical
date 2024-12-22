@@ -1,0 +1,31 @@
+name: Main
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+      - "**.jpg"
+      - "**.jpeg"
+      - "**.png"
+      - "index.html"
+
+permissions:
+  contents: read
+  checks: write
+  pages: write
+  id-token: write
+
+jobs:
+  golang_quality:
+    uses: CubicrootXYZ/Workflows/.github/workflows/golang_quality.yaml@v0.0.16
+
+  build_image:
+    uses: CubicrootXYZ/Workflows/.github/workflows/build_image.yaml@v0.0.16
+    with:
+      docker_build_args: "--no-cache"
+      docker_file_path: "./"
+      image_name: "cubicrootxyz/remindme"
+      static_tag: "beta"
+      vuln_scan: true
+    secrets:
+      dockerhub_user: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
