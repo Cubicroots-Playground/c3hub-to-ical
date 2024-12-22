@@ -21,4 +21,21 @@ Set the following environment variables:
 * `HUB_API_BASE_URL`: Base URL of the hubs API - usually is mentioned in the [hub repo](https://git.cccv.de/hub/hub)
 * `HUB_API_SESSION`: Session token from your user account at the hub (the value of the session cookie)
 * `TOKEN`: the token required to query the iCal file 
-* `LISTEN_ADDR`: address the webserver will listen on - most likely `127.0.0.1:80`
+* `LISTEN_ADDR`: address the webserver will listen on - most likely `127.0.0.1:80` or `0.0.0.0:80`
+
+## Docker Compose
+
+Example compose file:
+
+```yaml
+services:
+  c3hub-to-ical:
+    image: cubicrootxyz/c3hub-to-ical:beta
+    user: "0:0"
+    environment:
+      - 'HUB_API_BASE_URL=https://example.com/congress/2024'
+      - 'HUB_API_SESSION=xxx'
+      - 'TOKEN=yyy'
+      # Take care to expose this port in some way.
+      - 'LISTEN_ADDR=0.0.0.0:8000'
+```
