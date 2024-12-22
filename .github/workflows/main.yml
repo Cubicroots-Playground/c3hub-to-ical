@@ -23,7 +23,7 @@ jobs:
     with:
       docker_build_args: "--no-cache"
       docker_file_path: "./"
-      image_name: "cubicrootxyz/remindme"
+      image_name: "cubicrootxyz/c3hub-to-ical"
       static_tag: "beta"
       vuln_scan: true
     secrets:
