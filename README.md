@@ -19,9 +19,10 @@ See "config" section on how to setup, run the `cmd/main.go` and call `{LISTEN_AD
 Set the following environment variables:
 
 * `HUB_API_BASE_URL`: Base URL of the hubs API - usually is mentioned in the [hub repo](https://git.cccv.de/hub/hub)
-* `HUB_API_SESSION`: Session token from your user account at the hub (the value of the session cookie)
+* `HUB_API_TOKEN`: API token for the hubs API  - see [hub repo](https://git.cccv.de/hub/hub) for instructions to obtain it
 * `TOKEN`: the token required to query the iCal file 
 * `LISTEN_ADDR`: address the webserver will listen on - most likely `127.0.0.1:80` or `0.0.0.0:80`
+* `HUB_API_SESSION`: Session token from your user account at the hub (the value of the session cookie); NOT RECOMMENDED, use API token instead!
 
 ## Docker Compose
 
@@ -34,7 +35,7 @@ services:
     user: "0:0"
     environment:
       - 'HUB_API_BASE_URL=https://example.com/congress/2024'
-      - 'HUB_API_SESSION=xxx'
+      - 'HUB_API_TOKEN=xxx'
       - 'TOKEN=yyy'
       # Take care to expose this port in some way.
       - 'LISTEN_ADDR=0.0.0.0:8000'

@@ -15,8 +15,7 @@ func (service *service) GetMySchedule(
 	if err != nil {
 		return nil, err
 	}
-	r.Header.Add("Cookie", "38C3_SESSION="+service.config.SessionCookie)
-	r = r.WithContext(ctx)
+	r = service.injectAuth(ctx, r)
 
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
@@ -69,8 +68,7 @@ func (service *service) getEvents(
 	if err != nil {
 		return nil, err
 	}
-	r.Header.Add("Cookie", "38C3_SESSION="+service.config.SessionCookie)
-	r = r.WithContext(ctx)
+	r = service.injectAuth(ctx, r)
 
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {
@@ -144,8 +142,7 @@ func (service *service) getRooms(
 	if err != nil {
 		return nil, err
 	}
-	r.Header.Add("Cookie", "38C3_SESSION="+service.config.SessionCookie)
-	r = r.WithContext(ctx)
+	r = service.injectAuth(ctx, r)
 
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {

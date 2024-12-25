@@ -11,6 +11,7 @@ func main() {
 	hub := c3hub.New(c3hub.Config{
 		BaseURL:       os.Getenv("HUB_API_BASE_URL"),
 		SessionCookie: os.Getenv("HUB_API_SESSION"),
+		APIToken:      os.Getenv("HUB_API_TOKEN"),
 	})
 
 	server := api.New(api.Config{
