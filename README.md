@@ -1,5 +1,7 @@
 # c3hub-to-ical
 
+⚠️ This repo is archived - you can export your favorites as iCal now from within the hub itself.
+
 A daeomon that exposes your chaos communication congress schedule as iCal to be imported into your favourite calendar app.
 
 ⚠️ This is a proof of concept/alpha/however you want to call it. There is no guarantee it will work, it might break at any moment without further notice.
